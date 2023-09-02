@@ -1,0 +1,50 @@
+EQUIPMENT CHECKLIST:
+
+1) Rádio Taranis + Receptor X8R (Remote control) ---->
+2) HolyBro Telemetry Radio (Telemetry for Mission Planner) ---->
+3) Laptop for programming and using Mission Planner ---->
+4) Multiple outlet extension cords. ---->
+5) Tire inflation pump ---->
+6) Battery charger for charging the battery
+7) Locking pliers for motor attachment ---->
+8) Soldering station + Solder + Non-abrasive metallic sponge ---->
+9) DupontV jumper totem ---->
+10) Measurement equipment: conventional multimeters, non-intrusive DC current measurement multimeters, oscilloscope, cable tracer, logic analyzer for investigating UART, I2C, SPI, and other serial protocols.
+11) Lamination kit - Silicone, fiberglass, chemical gloves, silicone applicator tube, hot glue (can be dissolved with isopropyl alcohol)
+12) Logbook to keep on board.
+13) Bring a fuse box
+14) Bring a mop bucket
+15) Bring cloth
+16) Bring cables
+
+OPERATIONAL CHECKLIST:
+
+0) Fill out the checklists ---->
+1) Use the tire inflation pump ---->
+2) Measure battery voltage and charge it with a battery charger (CHECK IF CONFIGURED FOR 12V) ---->
+3) Visually check the boxes to see if the wires are properly connected and if there is no moisture in them.
+4) Check if manual switches are activated (Circuit breaker, contactor, winch and rudder switches, outboard motor connectors)
+   - Circuit breaker: Red bar = ON / Green bar = OFF
+   - Contactor: Raised: ON / Pressed = OFF
+   - Switches: Check positions
+   - Connectors - connect ---->
+5) Check if the fuses in the fuse box are good (Remove, hold against light, and analyze if the wire is still intact)
+6) If everything is working, turn on the circuit breaker last.
+
+CALIBRATIONS:
+RUDDER:
+1) Disengage the rudder potentiometer and verify if 5V is correctly supplied to its ends. This voltage should be stable and noise-free.
+2) Rotate the disengaged potentiometer to its center, so that the output voltage is 2.5V, which should correspond to a 512 ADC reading in the Arduino's analog-to-digital converter. This is done to ensure a symmetric range of motion for both sides of the rudder.
+3) Use the 12V cable to manually actuate the rudder to map the constants that will be used in the program. Place the rudder at one end and note the resulting ADC output and use a protractor to determine the angle relative to the bow. Repeat the same for the other end.
+4) Align the rudder with the bow of the boat and prepare to reattach the potentiometer, which was set to its previous midpoint in step 1. When reattaching and tightening the screw, it is likely to shift slightly from the center position, so a solution is to rotate it slightly more or less from the center, depending on the deviation caused by the attachment. For example, if attaching caused the ADC output to shift from 512 to 400, then rotate the potentiometer to achieve an ADC output of 612 and attach it to correct the error while considering the correction for the shift.
+5) Test the rudder with the remote control. Ensure it is operating correctly. Adjust the PI constants for better response if necessary.
+6) If the rudder goes to one end and gets stuck, it may mean two things:
+   I) The output signal is incorrect, so it is reinforcing the error instead of correcting it. Multiply the output signal by -1 in the program and see if it corrects the problem.
+   II) The current position of the rudder is beyond the limits set by the constants. For example, it is at 50 degrees, while the maximum allowed angle is 35 degrees. This results in a scenario where the error signal will never change its polarity, regardless of the control angle sent, as all angles will be below 50 degrees. To resolve this, manually align the rudder with the bow using the 12V cable. To avoid these scenarios, it would be good to implement a relay that only activates the rudder after the Arduino has fully initialized and implement a subroutine that detects this scenario and automatically returns the rudder to the center, then returning control back to the PI system.
+
+WINCH:
+1) Disengage the potentiometer.
+2) Set it to the value that gives 2V at the output, corresponding to a 0-degree angle, aligning the sail with the bow.
+3) Ensure there is enough rope available; if not, manually actuate the winch to provide more rope.
+4) Engage the potentiometer.
+5) Manually actuate the winch until it reaches 90 degrees. This should raise the output signal value to 4V.
